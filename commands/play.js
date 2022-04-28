@@ -51,11 +51,7 @@ module.exports = {
     if (mobileScRegex.test(url)) {
       try {
         https.get(url, function (res) {
-          if (res.statusCode == "302") {
-            return message.client.commands.get("play").execute(message, [res.headers.location]);
-          } else {
-            return message.reply(i18n.__("play.songNotFound")).catch(console.error);
-          }
+          return res.statusCode == "302" ? message.client.commands.get("play").execute(message, [res.headers.location]) : message.reply(i18n.__("play.songNotFound")).catch(console.error);
         });
       } catch (error) {
         console.error(error);
@@ -120,11 +116,7 @@ module.exports = {
       } catch (error) {
         console.error(error);
         
-        if (error.message.includes("410")) {
-          return message.reply(i18n.__("play.songAccessErr")).catch(console.error);
-        } else {
-          return message.reply(error.message).catch(console.error);
-        }
+        return error.message.includes("410") ? message.reply(i18n.__("play.songAccessErr")).catch(console.error) : message.reply(error.message).catch(console.error);
       }
     }
 
